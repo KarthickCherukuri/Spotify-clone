@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
-import Login from "./login";
+// import Login from "./login";
 import * as Google from "expo-auth-session/providers/google";
 import * as WebBrowser from "expo-web-browser";
 import {
@@ -11,6 +11,7 @@ import {
 import { auth } from "./firebaseConfig";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
+import SplashScreen from "./SplashScreen";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -41,7 +42,15 @@ export default function App() {
     return () => unsub();
   }, []);
 
-  return <Login promptAsync={promptAsync} />;
+  useEffect(() => {
+    const test = async () => {
+      const user = await AsyncStorage.getItem("@user1");
+      console.log(user);
+    };
+    test();
+  }, []);
+
+  return <SplashScreen promptAsync={promptAsync} />;
 }
 
 const styles = StyleSheet.create({

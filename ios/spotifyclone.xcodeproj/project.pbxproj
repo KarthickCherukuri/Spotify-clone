@@ -390,7 +390,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE -D EXPO_CONFIGURATION_DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = com.karthickch.spotifyclone;
 				PRODUCT_NAME = "spotifyclone";
 				SWIFT_OBJC_BRIDGING_HEADER = "spotifyclone/spotifyclone-Bridging-Header.h";
