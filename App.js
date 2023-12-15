@@ -35,7 +35,7 @@ export default function App() {
     const unsub = onAuthStateChanged(auth, async (user) => {
       if (user) {
         setUserInfo(user);
-        console.log(JSON.stringify(user, null, 2));
+
         await AsyncStorage.setItem("@user", JSON.stringify(user));
       }
     });
@@ -45,7 +45,6 @@ export default function App() {
   useEffect(() => {
     const test = async () => {
       const user = await AsyncStorage.getItem("@user1");
-      console.log(user);
     };
     test();
   }, []);
