@@ -6,6 +6,7 @@ import spotifyCredentials from "../../spotifyConfig";
 import { Buffer } from "buffer";
 import { useEffect, useState } from "react";
 import PosterList from "./PosterList";
+import { authorize } from "react-native-app-auth";
 const dummyData = [
   {
     id: "1",
@@ -41,11 +42,32 @@ const dummyData = [
 const Home = () => {
   const [newReases, setNewReleases] = useState(null);
   const [featuredPlaylists, setFeaturedPlaylists] = useState(null);
+
+  const accessTokenFetcherCustom = async () => {
+    const config = {
+      clientId: spotifyCredentials.clientId,
+      clientSecret: spotifyCredentials.clientSecret,
+      redirectUrl: "com.spotifylogin://oauthredirect",
+      scopes: [
+        "user-read-email",
+        "playlist-read-private",
+        "playlist-read-collaborative",
+      ],
+      serviceConfiguration: {
+        authorizationEndpoint: "https://accounts.spotify.com/authorize",
+        tokenEndpoint: "https://accounts.spotify.com/api/token",
+        revocationEndpoint: "https://accounts.spotify.com/api/token",
+      },
+    };
+    const response = await authorize(config);
+    console.log("getting");
+    console.log("response:", response);
+  };
   const accessTokenFetcher = async () => {
     var client_id = spotifyCredentials.clientId;
     var client_secret = spotifyCredentials.clientSecret;
     try {
-      var authOptions = {
+      const authOptions = {
         method: "POST",
         url: "https://accounts.spotify.com/api/token",
         headers: {
@@ -54,7 +76,7 @@ const Home = () => {
             "Basic " +
             new Buffer.from(client_id + ":" + client_secret).toString("base64"),
         },
-        body: `grant_type=client_credentials`,
+        body: `grant_type=client_credentials&scope=playlist-read-private playlist-read-collaborative`,
       };
       const response = await fetch(authOptions.url, authOptions);
       const data = await response.json();
@@ -119,6 +141,7 @@ const Home = () => {
 
   useEffect(() => {
     accessTokenFetcher();
+    // accessTokenFetcherCustom();
   }, []);
   return (
     <View style={styles.container}>
