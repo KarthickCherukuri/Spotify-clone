@@ -17,6 +17,7 @@ WebBrowser.maybeCompleteAuthSession();
 
 export default function App() {
   const [userInfo, setUserInfo] = useState();
+
   const [request, response, promptAsync] = Google.useAuthRequest({
     iosClientId:
       "481341226583-8bjrsqqqqbvsq5kbh63mp2i9n4qu73v0.apps.googleusercontent.com",
@@ -42,14 +43,7 @@ export default function App() {
     return () => unsub();
   }, []);
 
-  useEffect(() => {
-    const test = async () => {
-      const user = await AsyncStorage.getItem("@user1");
-    };
-    test();
-  }, []);
-
-  return <SplashScreen promptAsync={promptAsync} />;
+  return <SplashScreen promptAsync={promptAsync} userInfo={userInfo} />;
 }
 
 const styles = StyleSheet.create({

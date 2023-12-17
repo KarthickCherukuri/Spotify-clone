@@ -3,6 +3,8 @@ import HomeScreen from "./components/Home";
 import SearchScreen from "./components/Search";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import globalstyles from "./globalstyles";
+import Library from "./components/Library";
+import Premium from "./components/Premium";
 
 const Tab = createBottomTabNavigator();
 
@@ -41,6 +43,26 @@ const NavigationComponent = () => {
           tabBarLabel: "Search",
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="magnify" color={color} size={26} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Library"
+        component={Library}
+        options={{
+          tabBarLabel: "Library",
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="bookshelf" color={color} size={26} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Premium"
+        component={Premium}
+        options={{
+          tabBarLabel: "Premium",
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="spotify" color={color} size={26} />
           ),
         }}
       />

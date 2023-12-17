@@ -5,9 +5,11 @@ import { Text } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import NavigationComponent from "./Navigation";
 
-export default SplashScreen = ({ promptAsync }) => {
+export default SplashScreen = ({ promptAsync, userInfo }) => {
   const [isLoading, setIsLoading] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    userInfo === undefined ? false : true
+  );
 
   const isLoggedInFunc = async () => {
     const user = await AsyncStorage.getItem("@user");
@@ -18,9 +20,9 @@ export default SplashScreen = ({ promptAsync }) => {
   };
 
   const RenderFunction = () => {
-    if (isLoading) {
+    if (isLoading && !isLoggedIn) {
       return <Text>Loading...</Text>;
-    } else if (isLoggedIn) {
+    } else if (isLoggedIn || userInfo) {
       return (
         <NavigationContainer>
           <NavigationComponent />
