@@ -3,7 +3,7 @@ import globalstyles from "../../globalstyles";
 export default styles = StyleSheet.create({
   container: {
     flex: 1,
-
+    overflow: "scroll",
     backgroundColor: globalstyles.ViewBackgroundColor,
   },
   text: {

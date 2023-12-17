@@ -1,9 +1,83 @@
-import { Text, View } from "react-native";
+import { FlatList, Text, View } from "react-native";
 import styles from "./styles";
+import { useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import Element from "./Element";
 const Library = () => {
+  const [likedSongsNumber, setLikedSongsNumber] = useState(0);
+  const [playLists, setPlaylists] = useState(null);
+  const [artists, setArtists] = useState(null);
+  const fetchUsersPlaylists = async () => {
+    const accessToken = await AsyncStorage.getItem("@accessToken");
+    try {
+      const response = await fetch("https://api.spotify.com/v1/me/playlists", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        setPlaylists(data);
+      }
+      // This will be an array of the user's playlists
+
+      // Fetch the user's liked songs
+      const likedSongsResponse = await fetch(
+        "https://api.spotify.com/v1/me/tracks?limit=1",
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      const likedSongsData = await likedSongsResponse.json();
+      if (likedSongsResponse.ok) {
+        setLikedSongsNumber(likedSongsData.total);
+      }
+      fetchUsersArtists(accessToken);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  const fetchUsersArtists = async (accessToken) => {
+    try {
+      const response = await fetch(
+        "https://api.spotify.com/v1/me/following?type=artist",
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+      if (response.ok) {
+        setArtists({ ...data.artists, items: data.artists.items.reverse() });
+      } else {
+        console.log(data);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  useEffect(() => {
+    fetchUsersPlaylists();
+  }, []);
+
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Library</Text>
+      <Element likedSongs={true} number={likedSongsNumber} />
+      <FlatList
+        data={playLists?.items}
+        key={(item) => item.id}
+        renderItem={({ item }) => <Element {...item} />}
+      />
+      <FlatList
+        data={artists?.items}
+        key={(item) => item.id}
+        renderItem={({ item }) => <Element {...item} artist={true} />}
+      />
     </View>
   );
 };

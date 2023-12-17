@@ -2,6 +2,10 @@ import { FlatList, Text } from "react-native";
 import Poster from "./Poster";
 import posterStyles from "./Poster/styles";
 const PosterList = ({ data, heading }) => {
+  if (heading == '"Recently Played Tracks') {
+    console.log("recent", data);
+    return <Text>Loading</Text>;
+  }
   return (
     <>
       {data && (
@@ -12,7 +16,7 @@ const PosterList = ({ data, heading }) => {
             horizontal={true}
             renderItem={({ item }) => <Poster {...item} />}
             keyExtractor={(item) => item.id}
-            style={{ maxHeight: posterStyles.posterContainer.height }}
+            style={{ Height: posterStyles.posterContainer.height }}
             showsHorizontalScrollIndicator={false}
           />
         </>

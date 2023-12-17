@@ -11,6 +11,7 @@ const Search = () => {
         onPress={async () => {
           await signOut(auth);
           await AsyncStorage.removeItem("@user");
+          await AsyncStorage.removeItem("@accessToken");
         }}
         title="signout"
       />

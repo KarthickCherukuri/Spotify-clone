@@ -7,16 +7,19 @@ import NavigationComponent from "./Navigation";
 
 export default SplashScreen = ({ promptAsync, userInfo }) => {
   const [isLoading, setIsLoading] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState(
-    userInfo === undefined ? false : true
-  );
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const isLoggedInFunc = async () => {
-    const user = await AsyncStorage.getItem("@user");
+    const accessToken = await AsyncStorage.getItem("@accessToken");
     setIsLoading(false);
-    if (user) {
+    if (accessToken) {
       setIsLoggedIn(true);
     }
+  };
+
+  const manualLogin = () => {
+    setIsLoggedIn(true);
+    setIsLoading(false);
   };
 
   const RenderFunction = () => {
@@ -29,7 +32,7 @@ export default SplashScreen = ({ promptAsync, userInfo }) => {
         </NavigationContainer>
       );
     } else {
-      return <Login promptAsync={promptAsync} />;
+      return <Login manualLogin={manualLogin} />;
     }
   };
 

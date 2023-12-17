@@ -3,8 +3,7 @@ import globalstyles from "../../globalstyles";
 export default styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+
     backgroundColor: globalstyles.ViewBackgroundColor,
   },
   text: {
