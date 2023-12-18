@@ -66,7 +66,10 @@ export default Login = ({ promptAsync, manualLogin }) => {
           }
 
           const accessToken = result.accessToken;
+
           await AsyncStorage.setItem("@accessToken", accessToken);
+          await AsyncStorage.setItem("@refreshToken", result.refreshToken);
+          console.log({ refreshToken: result.refreshToken });
           manualLogin();
           // Now you can use the access token to make authorized API requests
         })

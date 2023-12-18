@@ -7,8 +7,14 @@ const Library = () => {
   const [likedSongsNumber, setLikedSongsNumber] = useState(0);
   const [playLists, setPlaylists] = useState(null);
   const [artists, setArtists] = useState(null);
-  const fetchUsersPlaylists = async () => {
+  const WrapperFunc = async () => {
     const accessToken = await AsyncStorage.getItem("@accessToken");
+    const promise1 = fetchUsersPlaylists(accessToken);
+    const promise2 = fetchUsersArtists(accessToken);
+    const promise3 = fetchLikedSongs(accessToken);
+    await Promise.all([promise1, promise2, promise3]);
+  };
+  const fetchUsersPlaylists = async (accessToken) => {
     try {
       const response = await fetch("https://api.spotify.com/v1/me/playlists", {
         headers: {
@@ -23,6 +29,13 @@ const Library = () => {
       // This will be an array of the user's playlists
 
       // Fetch the user's liked songs
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const fetchLikedSongs = async (accessToken) => {
+    try {
       const likedSongsResponse = await fetch(
         "https://api.spotify.com/v1/me/tracks?limit=1",
         {
@@ -40,6 +53,7 @@ const Library = () => {
       console.log(e);
     }
   };
+
   const fetchUsersArtists = async (accessToken) => {
     try {
       const response = await fetch(
@@ -62,7 +76,7 @@ const Library = () => {
     }
   };
   useEffect(() => {
-    fetchUsersPlaylists();
+    WrapperFunc();
   }, []);
 
   return (

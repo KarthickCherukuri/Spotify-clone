@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import PosterList from "./PosterList";
 import { authorize } from "react-native-app-auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { URLSearchParams } from "whatwg-fetch";
 const dummyData = [
   {
     id: "1",
@@ -46,6 +47,7 @@ const Home = () => {
   const [usersPlaylists, setUsersPlaylists] = useState(null);
   const [recentlyPlayedTracks, setRecentlyPlayedTracks] = useState(null);
   const [recomended, setRecomended] = useState(null);
+
   const accessTokenFetcherCustom = async () => {
     const config = {
       clientId: spotifyCredentials.clientId,
@@ -71,6 +73,38 @@ const Home = () => {
     }
   };
 
+  const getRefreshToken = async () => {
+    // refresh token that has been previously stored
+    const refreshToken = await AsyncStorage.getItem("@refreshToken");
+
+    try {
+      const url = "https://accounts.spotify.com/api/token";
+
+      const bodyData = `grant_type=refresh_token&refresh_token=${refreshToken}&client_id=${spotifyCredentials.clientId}`;
+
+      const payload = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: bodyData,
+      };
+      const response = await fetch(url, payload);
+      const data = await response.json();
+
+      if (response.ok && data.access_token && data.refresh_token) {
+        await AsyncStorage.setItem("@accessToken", data.access_token);
+        await AsyncStorage.setItem("@refreshToken", data.refresh_token);
+        return data.access_token;
+      } else {
+        const accessToken = await AsyncStorage.getItem("@accessToken");
+        return accessToken;
+      }
+    } catch (e) {
+      console.log("refresh token error", e);
+    }
+  };
+
   const accessTokenFetcher = async () => {
     // var client_id = spotifyCredentials.clientId;
     // var client_secret = spotifyCredentials.clientSecret;
@@ -88,12 +122,15 @@ const Home = () => {
       //   };
       //   const response = await fetch(authOptions.url, authOptions);
       //   const data = await response.json();
-      const accessToken = await AsyncStorage.getItem("@accessToken");
-      fetchNewReleases(accessToken);
-      fetchPlaylists(accessToken);
-      fetchUsersPlaylists(accessToken);
-      fetchRecentPlayedTracks(accessToken);
-      fetchRecomended(accessToken);
+
+      const accessToken = await getRefreshToken();
+      await Promise.all([
+        fetchNewReleases(accessToken),
+        fetchPlaylists(accessToken),
+        fetchUsersPlaylists(accessToken),
+        fetchRecentPlayedTracks(accessToken),
+        fetchRecomended(accessToken),
+      ]);
     } catch (e) {
       console.log("error in fetching token:", e);
     }

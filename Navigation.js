@@ -5,6 +5,29 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import globalstyles from "./globalstyles";
 import Library from "./components/Library";
 import Premium from "./components/Premium";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import Songs from "./components/Songs";
+
+const Stack = createNativeStackNavigator();
+
+const HomeScreenExtra = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: true,
+        headerStyle: { backgroundColor: globalstyles.headerBackgroundColor },
+        headerTintColor: globalstyles.TextColor,
+      }}>
+      <Stack.Screen component={HomeScreen} name="Home" />
+      <Stack.Screen
+        component={Songs}
+        name="Songs"
+        options={{ headerBackTitleVisible: false }}
+      />
+    </Stack.Navigator>
+  );
+};
 
 const Tab = createBottomTabNavigator();
 
@@ -16,6 +39,7 @@ const NavigationComponent = () => {
       screenOptions={{
         tabBarActiveTintColor: "#1CD760",
         tabBarInactiveTintColor: "white",
+        headerShown: true,
         tabBarStyle: { backgroundColor: "transparent", borderTopWidth: 0 },
         headerStyle: { backgroundColor: globalstyles.headerBackgroundColor },
         headerTintColor: globalstyles.TextColor,
@@ -28,8 +52,9 @@ const NavigationComponent = () => {
       }}>
       <Tab.Screen
         name="Home"
-        component={HomeScreen}
+        component={HomeScreenExtra}
         options={{
+          headerShown: false,
           tabBarLabel: "Home",
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="home" color={color} size={26} />

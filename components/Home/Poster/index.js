@@ -3,13 +3,26 @@ import { View, Image, Text, TouchableOpacity } from "react-native";
 import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 import styles from "./styles";
 import globalstyles from "../../../globalstyles";
-
-export default ImageWithSkeleton = ({ images, name }) => {
+import { useNavigation } from "@react-navigation/native";
+export default ImageWithSkeleton = ({ images, name, href }) => {
   const [isLoaded, setIsLoaded] = useState(false);
+  const navigation = useNavigation();
+  const [imageSource, setImageSource] = useState({
+    url: images[images.length - 1].url,
+    highRes: false,
+  });
+  //add custom functions for playlist types
 
   return (
     <>
-      <TouchableOpacity style={styles.posterContainer}>
+      <TouchableOpacity
+        style={styles.posterContainer}
+        onPress={() => {
+          console.log(href);
+          navigation.navigate("Songs", {
+            exchangeData: { href, name },
+          });
+        }}>
         <>
           {!isLoaded && (
             <SkeletonPlaceholder
@@ -20,11 +33,14 @@ export default ImageWithSkeleton = ({ images, name }) => {
           )}
           <Image
             source={{
-              uri: images[0].url,
+              uri: imageSource.url,
             }}
             style={isLoaded ? styles.imageStyle : { width: 1, height: 1 }}
             onLoad={() => {
               setIsLoaded(true);
+              if (!imageSource.highRes) {
+                setImageSource({ url: images[0].url, highRes: true });
+              }
             }}
             onError={() => {
               console.log("error while loading image");
