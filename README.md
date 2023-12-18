@@ -14,7 +14,7 @@ This project is a clone of the popular music streaming service, Spotify. It is b
 
 To install and run this project, you will need Node.js and npm installed on your machine. Follow these steps:
 
-1. Clone this repository: `git clone https://github.com/yourusername/spotify-clone.git`
+1. Clone this repository: `git clone https://github.com/KarthickCherukuri/Spotify-clone.git`
 2. Navigate into the project directory: `cd spotify-clone`
 3. Install the dependencies: `npm install`
 4. Start the project: `npm start`
