@@ -258,7 +258,7 @@ const Home = () => {
         heading="New Releases"
         data={newReases}
         horizontal={true}
-        renderItem={({ item }) => <Poster {...item} />}
+        renderItem={({ item }) => <Poster {...item} type="newReleases" />}
         keyExtractor={(item) => item.id}
         style={{ maxHeight: posterStyles.posterContainer.height }}
         showsHorizontalScrollIndicator={false}
@@ -268,7 +268,7 @@ const Home = () => {
         heading="Featured"
         data={featuredPlaylists}
         horizontal={true}
-        renderItem={({ item }) => <Poster {...item} />}
+        renderItem={({ item }) => <Poster {...item} type="Featured" />}
         keyExtractor={(item) => item.id}
         style={{ maxHeight: posterStyles.posterContainer.height }}
         showsHorizontalScrollIndicator={false}
@@ -278,7 +278,7 @@ const Home = () => {
         heading="Recomended"
         data={recomended}
         horizontal={true}
-        renderItem={({ item }) => <Poster {...item} />}
+        renderItem={({ item }) => <Poster {...item} type="" />}
         keyExtractor={(item) => item.id}
         style={{ maxHeight: posterStyles.posterContainer.height }}
         showsHorizontalScrollIndicator={false}
@@ -287,7 +287,7 @@ const Home = () => {
         heading="Playlists"
         data={usersPlaylists}
         horizontal={true}
-        renderItem={({ item }) => <Poster {...item} />}
+        renderItem={({ item }) => <Poster {...item} type="" />}
         keyExtractor={(item) => item.id}
         style={{ maxHeight: posterStyles.posterContainer.height }}
         showsHorizontalScrollIndicator={false}
@@ -297,7 +297,7 @@ const Home = () => {
         heading="Recently Played Tracks" //requires tweeking
         data={recentlyPlayedTracks}
         horizontal={true}
-        renderItem={({ item }) => <Poster {...item} />}
+        renderItem={({ item }) => <Poster {...item} type="" />}
         keyExtractor={(item) => item.id}
         style={{ maxHeight: posterStyles.posterContainer.height }}
         showsHorizontalScrollIndicator={false}

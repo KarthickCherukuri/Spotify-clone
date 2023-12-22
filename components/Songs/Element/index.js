@@ -3,16 +3,16 @@ import { View, Image, Text, TouchableOpacity } from "react-native";
 import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 import styles from "./styles";
 import globalstyles from "../../../globalstyles";
-
+import FastImage from "react-native-fast-image";
 export default ImageWithSkeleton = ({
   likedSongs = false,
   name = "",
   number = 0,
   images = null,
   owner = null,
-  artist = false,
+  artists = null,
 }) => {
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(!images);
 
   return (
     <>
@@ -25,38 +25,36 @@ export default ImageWithSkeleton = ({
               <SkeletonPlaceholder.Item {...styles.container} />
             </SkeletonPlaceholder>
           )}
-          <Image
-            source={{
-              uri: images
-                ? images[0].url
-                : "https://source.unsplash.com/random",
-            }}
-            style={
-              isLoaded
-                ? {
-                    ...styles.imageStyle,
-                    borderRadius: artist ? styles.imageStyle.width : 0,
-                  }
-                : { width: 1, height: 1 }
-            }
-            onLoad={() => {
-              setIsLoaded(true);
-            }}
-            onError={() => {
-              console.log("error while loading image");
-            }}
-          />
+          {images && (
+            <FastImage
+              source={{
+                priority: FastImage.priority.normal,
+                uri: images
+                  ? images[0].url
+                  : "https://source.unsplash.com/random",
+              }}
+              style={
+                isLoaded
+                  ? {
+                      ...styles.imageStyle,
+                    }
+                  : { width: 1, height: 1 }
+              }
+              onLoad={() => {
+                setIsLoaded(true);
+              }}
+              onError={() => {
+                console.log("error while loading image");
+              }}
+              resizeMode={FastImage.resizeMode.contain}
+            />
+          )}
+
           <View style={{ justifyContent: "center", padding: 10 }}>
             <Text style={isLoaded ? styles.text : { display: "none" }}>
               {likedSongs ? "Liked Songs" : name}
             </Text>
-            {!artist ? (
-              <Text style={styles.smallText}>
-                Playlist • {likedSongs ? number : owner && owner.display_name}
-              </Text>
-            ) : (
-              <Text style={styles.smallText}>Artist</Text>
-            )}
+            <Text style={styles.smallText}>{artists.join("")}</Text>
           </View>
         </>
       </TouchableOpacity>

@@ -8,15 +8,52 @@ const Songs = ({ navigation, route }) => {
   const [title, setTitle] = useState(route.params.title);
   const [data, setData] = useState(null);
   const { exchangeData } = route.params;
+  const { type, likedSongs = false } = exchangeData;
 
-  function getSecondPathSegment(url) {
-    const path = new URL(url).pathname;
-    const segments = path.split("/");
-    return segments[2]; // segments[0] will be an empty string because the path starts with a slash
-  }
+  const fetchNewReleases = async (url, accessToken) => {
+    if (accessToken == null) return;
+    try {
+      const response = await fetch(url, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      const data = await response.json();
+      if (response.ok) {
+        const { items } = data.tracks;
+        data.tracks.items = items.map((each) => {
+          {
+            const { artists } = each;
+            const names = artists.map((each) => each.name);
+            return { ...each, artists: names };
+          }
+        });
+
+        setData(data.tracks);
+      }
+    } catch (e) {
+      console.log("error while fetching new Releases", e);
+    }
+  };
+
+  const fetchPlaylists = (data) => {
+    const { tracks } = data;
+
+    tracks.items = tracks.items.map((item) => {
+      const { track } = item;
+      const { artists } = track;
+
+      const names = artists.map((each) => each.name);
+      const newImages = item.images ? item.images : data.images;
+
+      return { ...item.track, images: newImages, artists: names };
+    });
+    setData(tracks);
+  };
 
   const fetchData = async () => {
     const accessToken = await AsyncStorage.getItem("@accessToken");
+
     if (accessToken == null) return;
     try {
       const response = await fetch(exchangeData.href, {
@@ -25,21 +62,27 @@ const Songs = ({ navigation, route }) => {
         },
       });
       const data = await response.json();
-      console.log(data);
-      if (response.ok) {
-        if (data.tracks) {
-          console.log(data);
-          const { items } = data.tracks;
+      const { name } = data;
 
-          const tracks1 = items.map((track) => {
-            return { ...track, images: data.images };
-          });
-          setData({ ...data.tracks, items: tracks1 });
-          navigation.setOptions({ title: data.name });
-        } else {
-          exchangeData.href = data.album.href;
-          fetch(data);
+      if (likedSongs) {
+        fetchPlaylists({ tracks: { items: data.items } });
+        navigation.setOptions({ title: "Liked Songs" });
+        return;
+      }
+      navigation.setOptions({ title: name });
+      if (response.ok) {
+        switch (type) {
+          case "album":
+            fetchNewReleases(data.href, accessToken);
+            break;
+          case "playlist":
+            fetchPlaylists(data);
+            break;
+          case "track":
+            fetchNewReleases(data.album.href, accessToken);
         }
+
+        // fetchNewReleases(data.href, accessToken);
       }
     } catch (e) {
       console.log("error while fetching new releases:", e);

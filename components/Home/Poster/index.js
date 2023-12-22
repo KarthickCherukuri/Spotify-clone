@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { View, Image, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 import styles from "./styles";
 import globalstyles from "../../../globalstyles";
+import FastImage from "react-native-fast-image";
 import { useNavigation } from "@react-navigation/native";
-export default ImageWithSkeleton = ({ images, name, href }) => {
+export default ImageWithSkeleton = ({ images, name, href, type = "" }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const navigation = useNavigation();
   const [imageSource, setImageSource] = useState({
@@ -18,9 +19,9 @@ export default ImageWithSkeleton = ({ images, name, href }) => {
       <TouchableOpacity
         style={styles.posterContainer}
         onPress={() => {
-          console.log(href);
+          console.log(type);
           navigation.navigate("Songs", {
-            exchangeData: { href, name },
+            exchangeData: { href, name, type },
           });
         }}>
         <>
@@ -31,9 +32,10 @@ export default ImageWithSkeleton = ({ images, name, href }) => {
               <SkeletonPlaceholder.Item {...styles.imageStyle} />
             </SkeletonPlaceholder>
           )}
-          <Image
+          <FastImage
             source={{
               uri: imageSource.url,
+              priority: FastImage.priority.normal,
             }}
             style={isLoaded ? styles.imageStyle : { width: 1, height: 1 }}
             onLoad={() => {
@@ -42,6 +44,7 @@ export default ImageWithSkeleton = ({ images, name, href }) => {
                 setImageSource({ url: images[0].url, highRes: true });
               }
             }}
+            resizeMode={FastImage.resizeMode.contain}
             onError={() => {
               console.log("error while loading image");
             }}

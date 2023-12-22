@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Element from "./Element";
 const Library = () => {
-  const [likedSongsNumber, setLikedSongsNumber] = useState(0);
+  const [likedSongsData, setLikedSongsData] = useState(0);
   const [playLists, setPlaylists] = useState(null);
   const [artists, setArtists] = useState(null);
   const WrapperFunc = async () => {
@@ -46,7 +46,7 @@ const Library = () => {
       );
       const likedSongsData = await likedSongsResponse.json();
       if (likedSongsResponse.ok) {
-        setLikedSongsNumber(likedSongsData.total);
+        setLikedSongsData(likedSongsData);
       }
       fetchUsersArtists(accessToken);
     } catch (e) {
@@ -81,7 +81,12 @@ const Library = () => {
 
   return (
     <View style={styles.container}>
-      <Element likedSongs={true} number={likedSongsNumber} />
+      <Element
+        likedSongs={true}
+        number={likedSongsData.total}
+        type="track"
+        href={likedSongsData.href}
+      />
       <FlatList
         data={playLists?.items}
         key={(item) => item.id}

@@ -29,6 +29,24 @@ const HomeScreenExtra = () => {
   );
 };
 
+const LibraryScreenExtra = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: true,
+        headerStyle: { backgroundColor: globalstyles.headerBackgroundColor },
+        headerTintColor: globalstyles.TextColor,
+      }}>
+      <Stack.Screen component={Library} name="Library" />
+      <Stack.Screen
+        component={Songs}
+        name="Songs"
+        options={{ headerBackTitleVisible: false }}
+      />
+    </Stack.Navigator>
+  );
+};
+
 const Tab = createBottomTabNavigator();
 
 const NavigationComponent = () => {
@@ -51,7 +69,7 @@ const NavigationComponent = () => {
         },
       }}>
       <Tab.Screen
-        name="Home"
+        name="HomeTab"
         component={HomeScreenExtra}
         options={{
           headerShown: false,
@@ -72,10 +90,11 @@ const NavigationComponent = () => {
         }}
       />
       <Tab.Screen
-        name="Library"
-        component={Library}
+        name="LibraryTab"
+        component={LibraryScreenExtra}
         options={{
           tabBarLabel: "Library",
+          headerShown: false,
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="bookshelf" color={color} size={26} />
           ),
@@ -86,6 +105,7 @@ const NavigationComponent = () => {
         component={Premium}
         options={{
           tabBarLabel: "Premium",
+
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="spotify" color={color} size={26} />
           ),

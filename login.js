@@ -9,7 +9,7 @@ import {
 import * as WebBrowser from "expo-web-browser";
 import * as AuthSession from "expo-auth-session";
 import globalstyles from "./globalstyles";
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import spotifyCredentials from "./spotifyConfig";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 

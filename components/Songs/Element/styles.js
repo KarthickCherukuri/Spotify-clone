@@ -13,8 +13,8 @@ export default styles = StyleSheet.create({
     marginBottom: 10,
   },
   imageStyle: {
-    width: 80,
-    height: 80,
+    width: 40,
+    height: 40,
   },
   text: {
     color: globalstyles.TextColor,
